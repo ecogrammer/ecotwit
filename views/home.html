@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>TwitterAPI／GAE sample ({{ OwnerName }}のタイムライン)</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+</head>
+<body>
+    <div style="margin-bottom:10px;"><a href="/logout">ログアウト</a></div>
+    <h1>{{ OwnerName }}</h1>
+    <!-- 自分のタイムラインの時のみ表示 -->
+    {% if IsMyHome %}
+    <!-- input form -->
+    <form action="/tweet" method="post">
+      <input type="text" name="status" maxlength="140" style="width : 600px;"/>
+      <input type="submit" value="つぶやく" />
+    </form>
+    <!-- //input form -->
+    {% endif %}
+
+    {% if result %}
+    <!-- timeline -->
+      {% for st in result %}
+        <div style="margin-bottom:10px;">
+            <a href="/friends/{{ st.user.screen_name }}">{{ st.user.screen_name }} </a> : {{ st.display_text }}
+            <!-- 自分の発言に対してのみ削除リンクを表示 -->
+            {% ifequal st.user.screen_name MyScreenName %}
+            &nbsp;&nbsp;<a href="/delete?id={{ st.id }}">削除</a>
+            {% endifequal %}
+            <br />
+            from {{ st.source }} &nbsp;&nbsp {{ st.display_time }}
+        </div>
+      {% endfor %}
+    <!-- //timeline -->
+    {% endif %}
+</body>
+</html>
