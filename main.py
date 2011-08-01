@@ -23,7 +23,7 @@ import time
 import datetime
 from decimal import *
 import logging
-import socket
+
 
 import oauth
 import os
@@ -36,8 +36,6 @@ from simple_cookie import Cookies
 #画面表示用テンプレートHTMLのファイル名
 LOGIN_TEMPLATE_NAME = 'login.html' #ログイン画面
 HOME_TEMPLATE_NAME = 'home.html' #タイムライン表示用
-HOME_CSS_NAME = 'main.css'
-
 
 #API登録時に表示されるConsumer keyとConcumer secretを指定してください
 CONSUMER_KEY = "fLi37woqykELWbgsgSrfw" #Consumer key
@@ -278,12 +276,10 @@ class MainHandler(webapp.RequestHandler):
     def ShowMyTimeline(self, client, cookie):
         param = {'count': TIMELINE_COUNT}
         timeline_url = "http://api.twitter.com/1/statuses/home_timeline.json"
-        response = client.make_request(
-            url = timeline_url,
-            token = cookie["user_token"], 
-            secret = cookie["user_secret"],
-            additional_params = param
-        )
+        response = client.make_request(url=timeline_url,
+            token=cookie["user_token"], 
+            secret=cookie["user_secret"],
+            additional_params=param)
 
         #表示のたびにCookieを更新する
         UpdateCookie(self, cookie)
@@ -294,15 +290,12 @@ class MainHandler(webapp.RequestHandler):
 
             #表示用にデータを調整
             display_result = FormatResult(result)
-
-            csspath = os.path.join(os.path.dirname(__file__),'css',HOME_CSS_NAME)
-
+         
             template_values = {
                 'IsMyHome': True,
                 'MyScreenName' : cookie["screen_name"],
                 'OwnerName' : cookie["screen_name"],
-                'result': display_result,
-                'csspath' : csspath
+                'result': display_result
             }
             #テンプレートの読み込み
             tmpl = os.path.join(os.path.dirname(__file__),'views',HOME_TEMPLATE_NAME)
@@ -356,25 +349,22 @@ class FriendsHandler(webapp.RequestHandler):
                 token=cookie["user_token"], #Cookieから
                 secret=cookie["user_secret"], #Cookieから
                 additional_params=param) #作成したパラメータオブジェクト
-
+      
             #表示のたびにCookieを更新する
             UpdateCookie(self, cookie)
-
+          
             #結果の取得
             try:
                 result = simplejson.loads(response.content)
-
+      
                 #表示用にデータを調整
                 display_result = FormatResult(result)
-
-                csspath = os.path.join(os.path.dirname(__file__),'css',HOME_CSS_NAME)
-
+        
                 #テンプレート表示用の値を設定
                 template_values = {
-                    'MyScreenName' : cookie["screen_name"],
-                    'OwnerName' : screen_name,
-                    'result': display_result,
-                    'csspath' : csspath
+                'MyScreenName' : cookie["screen_name"],
+                'OwnerName' : screen_name,
+                  'result': display_result
                 }
     
                 #テンプレートの読み込み
