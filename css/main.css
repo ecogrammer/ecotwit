@@ -56,3 +56,7 @@ h3 {font-size: 1.180em; color: #525252; line-height: 110%;}
 /* side menu */
 ul {list-style-type: none;}
 ol {list-style-type: none;}
+
+/* p */
+p {margin: 5px 0 5px 0; padding: 0;}
+form {margin: 5px 0 5px 0; padding: 0;}
